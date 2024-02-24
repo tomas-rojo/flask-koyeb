@@ -24,9 +24,6 @@ jobs:
         with:
           api_token: "${{ secrets.KOYEB_TOKEN }}"
           github_token: "${{ secrets.GHCR_TOKEN }}"
-      - name: Build and deploy the application to Koyeb
-        uses: koyeb/action-git-deploy@v1
-        with:
-          app-name: silly-jacinda
-          service-name: flask-koyeb
+      - name: Deploy to Koyeb
+        run: koyeb service redeploy silly-jacind/flask-koyeb
 
