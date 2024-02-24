@@ -20,4 +20,4 @@ jobs:
           api_token: "${{ secrets.KOYEB_TOKEN }}"
           github_token: "${{ secrets.GITHUB_TOKEN }}"
       - name: Deploy to Koyeb
-        run: koyeb service redeploy fd054ac2-94ed-4151-8c70-2bb435b4a7e9/8b6aac86-3f0e-434a-894b-43040cdda5d0
+        run: koyeb service redeploy silly-jacinda/flask-koyeb
