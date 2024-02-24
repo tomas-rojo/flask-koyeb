@@ -7,15 +7,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Docker login
-        run: echo $GHCR_TOKEN | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Docker build
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Container Registry
+        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+
+      - name: Build and push Docker image
         env:
-          IMAGE_NAME: flask-hello-world
+          IMAGE_NAME: flask-koyeb
           TAG: latest
         run: |
-          docker build \
-          -t ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} \
-          --push .
+          docker buildx build \
+            --platform linux/amd64,linux/arm64 \
+            -t ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} \
+            --push .
