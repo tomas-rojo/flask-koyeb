@@ -8,22 +8,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Docker build
-        run: docker build --rm=false -t ghcr.io/tomas-rojo/flask-hello-world:0.0.2 .
       - name: Docker login
-        run: echo $GHCR_TOKEN | docker login ghcr.io -u tomas-rojo --password-stdin
-      - name: Docker push
-        run: echo hello && docker push ghcr.io/tomas-rojo/flask-hello-world:0.0.2
+        run: echo $GHCR_TOKEN | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install and configure the Koyeb CLI
-        uses: koyeb-community/install-koyeb-cli@v2
-        with:
-          api_token: "${{ secrets.KOYEB_TOKEN }}"
-          github_token: "${{ secrets.GHCR_TOKEN }}"
-      - name: Deploy to Koyeb
-        run: koyeb service redeploy silly-jacinda/flask-koyeb
-
+      - name: Docker build
+        env:
+          IMAGE_NAME: flask-hello-world
+          TAG: latest
+        run: |
+          docker buildx build \
+          --platform linux/amd64,linux/arm64 \
+          -t ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} \
+          --push .
