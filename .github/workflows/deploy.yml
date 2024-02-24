@@ -9,13 +9,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Docker build
-        run: docker build --rm=false -t ghcr.io/tomas-rojo/flask-hello-world:0.0.1 .
+        run: docker build --rm=false -t ghcr.io/tomas-rojo/flask-hello-world:0.0.2 .
       - name: Docker login
         run: echo $GHCR_TOKEN | docker login ghcr.io -u tomas-rojo --password-stdin
       - name: Docker push
         run: echo hello && docker push ghcr.io/tomas-rojo/flask-hello-world:0.0.2
 
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Install and configure the Koyeb CLI
