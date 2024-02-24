@@ -30,7 +30,7 @@ ENV TZ=Europe/Amsterdam
 
 # Install app
 WORKDIR /app
-COPY app.py /app
+COPY src/ /app
 
 ENV PYTHONPATH /app
 
