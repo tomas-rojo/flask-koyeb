@@ -14,9 +14,8 @@ jobs:
       - name: Login to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
-      - name: Build and push Docker image
+      - name: Build Docker image and push it to GitHub Container Registry
         run: |
-          docker buildx create --use
           docker buildx build --push \
             --tag ghcr.io/${{ github.repository }}:latest \
             --platform linux/amd64,linux/arm64 \
@@ -30,5 +29,6 @@ jobs:
         with:
           api_token: "${{ secrets.KOYEB_TOKEN }}"
           github_token: "${{ secrets.GITHUB_TOKEN }}"
+
       - name: Deploy to Koyeb
         run: koyeb service redeploy silly-jacinda/flask-koyeb
