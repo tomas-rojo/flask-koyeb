@@ -1,10 +1,10 @@
 name: "Build & Deploy"
-on:
-  workflow_run:
-    workflows: ["Run Tests"]
-    branches: [main]
-    types: 
-      - completed
+on: [push]
+  # workflow_run:
+  #   workflows: ["Run Tests"]
+  #   branches: [main]
+  #   types: 
+  #     - completed
 
 jobs:
   setup-buildx:
@@ -47,8 +47,6 @@ jobs:
           platforms: ${{ matrix.platform }}
           push: true
           tags: ghcr.io/${{ github.repository }}:${{ matrix.platform }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
 
   # deploy:
