@@ -26,7 +26,8 @@ jobs:
     needs: setup-buildx
     runs-on: ubuntu-latest
     strategy:
-      matrix: ${{fromJson(needs.setup-buildx.outputs.matrix)}}
+      matrix:
+        platform: [linux/amd64, linux/arm64]
 
     steps:
       - name: Checkout code
@@ -48,6 +49,7 @@ jobs:
           tags: ghcr.io/${{ github.repository }}:${{ matrix.platform }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
 
   # deploy:
   #    needs: build-and-push
