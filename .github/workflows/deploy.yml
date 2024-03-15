@@ -1,4 +1,4 @@
-name: ci
+name: Build & Deploy
 
 on:
   push:
@@ -108,15 +108,16 @@ jobs:
         run: |
           docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}
 
-  # deploy:
-  #    needs: build-and-push
-  #    runs-on: ubuntu-latest
-  #    steps:
-  #     - name: Install and configure the Koyeb CLI
-  #       uses: koyeb-community/install-koyeb-cli@v2
-  #       with:
-  #         api_token: "${{ secrets.KOYEB_TOKEN }}"
-  #         github_token: "${{ secrets.GITHUB_TOKEN }}"
+  deploy:
+     needs:
+       - merge
+     runs-on: ubuntu-latest
+     steps:
+      - name: Install and configure the Koyeb CLI
+        uses: koyeb-community/install-koyeb-cli@v2
+        with:
+          api_token: "${{ secrets.KOYEB_TOKEN }}"
+          github_token: "${{ secrets.GITHUB_TOKEN }}"
 
-  #     - name: Deploy to Koyeb
-  #       run: koyeb service redeploy silly-jacinda/flask-koyeb
+      - name: Deploy to Koyeb
+        run: koyeb service redeploy silly-jacinda/flask-koyeb
