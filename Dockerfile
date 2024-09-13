@@ -35,4 +35,4 @@ COPY src/ /app
 ENV PYTHONPATH /app
 
 # Run app
-CMD ["gunicorn", "-w 4", "app:app"]
+CMD ["gunicorn", "-w 4", "-b", "0.0.0.0", "app:app"]
